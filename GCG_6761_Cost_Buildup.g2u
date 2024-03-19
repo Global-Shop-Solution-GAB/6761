@@ -1,0 +1,112 @@
+﻿Program.Sub.Preflight.Start
+Program.External.Include.Library("1500.Lib")
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+F.Intrinsic.Control.SetErrorHandler("Main_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String,"")
+V.Local.sPart.Declare(String,"")
+
+Function.Intrinsic.UI.UsePixels ' Allows you to use Pixels instead of Twips throughout
+
+F.Intrinsic.Control.SelectCase(V.Caller.Hook)
+	F.Intrinsic.Control.Case(10260)
+	'quote line screen	
+		V.Passed.000201.Set("Crate CALC")
+		V.Passed.000202.Set("Cost Buildup")
+		
+	F.Intrinsic.Control.Case(10680)
+		F.Intrinsic.Control.If(V.Passed.000052.Trim,=,"")
+			F.Intrinsic.UI.Msgbox("Select a part","Attention")
+			F.Intrinsic.Control.End
+		F.Intrinsic.Control.EndIf
+		F.Intrinsic.UI.InvokeWaitDialog("Router Cost Buildup...................")
+		F.Intrinsic.Control.If(V.Passed.000053.Trim,<>,"")
+			F.Intrinsic.String.RPad(V.Passed.000052," ",17,V.Local.sPart)
+			F.Intrinsic.String.Build("{0}{1}",V.Local.sPart,V.Passed.000053.Trim,V.Local.sPart)
+		F.Intrinsic.Control.Else
+			V.Local.sPart.Set(V.Passed.000052)
+		F.Intrinsic.Control.EndIf
+		
+		F.Data.DataTable.AddRow("1500","ROUTER",V.Local.sPart.Trim,"Quantity",1)
+		F.Intrinsic.Control.CallSub(1500sync)
+
+		F.Intrinsic.Control.CallSub(Get_Cost)
+		F.Intrinsic.UI.CloseWaitDialog
+		
+F.Intrinsic.Control.EndSelect
+
+F.Intrinsic.Control.End
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Main_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.String.Build("Project: GCG_6761_Cost_Buildup.g2u {0}{0}Subroutine: {1}{0}Error Occurred {2} with description {3}",V.Ambient.NewLine,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End
+Function.Intrinsic.Control.EndIf
+Program.Sub.Main.End
+
+Program.Sub.Get_Cost.Start
+F.Intrinsic.Control.SetErrorHandler("Get_Cost_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String,"")
+V.Local.sPart.Declare(String,"")
+V.Local.sFile.Declare(String,"")
+V.Local.fMat.Declare(Float,0)
+V.Local.fOut.Declare(Float,0)
+V.Local.fLab.Declare(Float,0)
+V.Local.fTotalCost.Declare(Float,0)
+V.Local.fMrkUpMat.Declare(Float,0)
+V.Local.fMrkUpOut.Declare(Float,0)
+V.Local.fMrkUpLab.Declare(Float,0)
+V.Local.fPrice.Declare(Float,0)
+V.Local.sSql.Declare(String,"")
+	
+'get the output file from the router biuld up and put it in a datatable(s)
+F.Intrinsic.String.Build("{0}\{1}{2}PRICING.OUT",v.Caller.FilesDir,v.Caller.User.Trim,v.Caller.Terminal.Trim,v.Local.sFile)
+F.Intrinsic.File.File2String(V.Local.sFile,V.Local.sPart)
+
+F.Data.DataTable.CreateFromString("ROUTER",V.Local.sPart,"TYPE*!*ROUTER*!*QTY*!*DIR_COST*!*COST*!*MATERIAL*!*OUTSIDE*!*LABOR*!*LABOR_HOURS*!*OVERHEAD*!*TIME_QTY*!*GP%-1*!*PRICE-1*!*GP%-2*!*PRICE-2*!*GP%-3*!*PRICE-3*!*GP%-4*!*PRICE-4*!*SELL3","STRING*!*STRING*!*STRING*!*STRING*!*STRING*!*STRING*!*STRING*!*STRING*!*STRING*!*STRING*!*STRING*!*STRING*!*STRING*!*STRING*!*STRING*!*STRING*!*STRING*!*STRING*!*STRING*!*STRING","*!*",V.Ambient.NewLine,True)
+F.Intrinsic.Control.If(V.DataTable.ROUTER.RowCount--,>,0)
+    'Type M = Markup  Marterial markup Columns(Router, Qty, Dir_Cost, Cost), Outside markup columns(Material, Outside, Labor, Labor_Hours), Labor markup columns(Overhead, Time_Qty, GP%-1, Price-1)
+    'Type T = Total, Material = Material Column, Outside = Outside Column, Labor&Overhead = Labor Column + Overhead Column
+    F.Data.DataView.Create("Router","TRouter",22,"Type = 'T'","")
+    F.Data.DataView.Create("Router","MRouter",22,"Type = 'M'","")
+    V.Local.fMat.Set(V.DataView.ROUTER!TRouter(V.DataView.ROUTER!TRouter.RowCount--).Material!FieldVal)
+    V.Local.fOut.Set(V.DataView.ROUTER!TRouter(V.DataView.ROUTER!TRouter.RowCount--).Outside!FieldVal)
+    F.Intrinsic.Math.Add(V.DataView.ROUTER!TRouter(V.DataView.ROUTER!TRouter.RowCount--).Labor!FieldVal,V.DataView.ROUTER!TRouter(V.DataView.ROUTER!TRouter.RowCount--).Overhead!FieldVal,V.Local.fLab)
+    V.Local.fTotalCost.Set(V.DataView.ROUTER!TRouter(V.DataView.ROUTER!TRouter.RowCount--).Cost!FieldVal)
+    
+    F.Intrinsic.Math.Mult(V.Local.fMat,V.DataView.ROUTER!MRouter(V.DataView.ROUTER!MRouter.RowCount--).Cost!FieldVal,V.Local.fMrkUpMat)
+    F.Intrinsic.Math.Mult(V.Local.fOut,V.DataView.ROUTER!MRouter(V.DataView.ROUTER!MRouter.RowCount--).Labor_Hours!FieldVal,V.Local.fMrkUpOut)
+    F.Intrinsic.Math.Mult(V.Local.fLab,V.DataView.ROUTER!MRouter(V.DataView.ROUTER!MRouter.RowCount--).Price-1!FieldVal,V.Local.fMrkUpLab)
+    F.Intrinsic.Math.Add(V.Local.fMrkUpLab,V.Local.fMrkUpMat,V.Local.fMrkUpOut,V.Local.fPrice)
+    
+    F.Data.DataView.Close("Router","TRouter")
+    F.Data.DataView.Close("Router","MRouter")
+F.Intrinsic.Control.EndIf
+
+F.Data.Datatable.Close("ROUTER")
+
+V.Passed.000009.Set(V.Local.fPrice)
+V.Passed.000012.Set(V.Local.fTotalCost)
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Get_Cost_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.String.Build("Project: GCG_6761_Cost_Buildup.g2u {0}{0}Subroutine: {1}{0}Error Occurred {2} with description {3}",V.Ambient.NewLine,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End
+Function.Intrinsic.Control.EndIf
+Program.Sub.Get_Cost.End
+
+Program.Sub.Comments.Start
+${$5$}$20.1.8413.19752$}$1
+${$6$}$rking$}$20230313105323576$}$QNdZLVy4bWuiWa9jh1ZTiKHvMPldSPXec27HU3RRa8fSJv68Dp+Iht+/tpqvbWvxGl8zayJyK5w=
+Program.Sub.Comments.End
