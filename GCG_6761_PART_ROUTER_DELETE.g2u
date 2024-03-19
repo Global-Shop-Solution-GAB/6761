@@ -1,0 +1,309 @@
+﻿Program.Sub.ScreenSU.Start
+Gui.frmPartRouterDelete..create(BaseForm)
+Gui.frmPartRouterDelete..caption("Part / Router  Delete")
+Gui.frmPartRouterDelete..size(11070,6105)
+Gui.frmPartRouterDelete..minx(0)
+Gui.frmPartRouterDelete..miny(0)
+Gui.frmPartRouterDelete..position(0,0)
+Gui.frmPartRouterDelete..event(UnLoad,frmPartRouterDelete_unload)
+Gui.frmPartRouterDelete..alwaysontop(False)
+Gui.frmPartRouterDelete..fontname("Arial")
+Gui.frmPartRouterDelete..fontsize(8)
+Gui.frmPartRouterDelete..forecolor(0)
+Gui.frmPartRouterDelete..fontstyle(,)
+Gui.frmPartRouterDelete..BackColor(-2147483633)
+Gui.frmPartRouterDelete..controlbox(True)
+Gui.frmPartRouterDelete..maxbutton(True)
+Gui.frmPartRouterDelete..minbutton(True)
+Gui.frmPartRouterDelete..mousepointer(0)
+Gui.frmPartRouterDelete..moveable(True)
+Gui.frmPartRouterDelete..sizeable(True)
+Gui.frmPartRouterDelete..ShowInTaskBar(True)
+Gui.frmPartRouterDelete..titlebar(True)
+Gui.frmPartRouterDelete.cmdDelete.create(button)
+Gui.frmPartRouterDelete.cmdDelete.caption("Delete")
+Gui.frmPartRouterDelete.cmdDelete.visible(True)
+Gui.frmPartRouterDelete.cmdDelete.size(855,375)
+Gui.frmPartRouterDelete.cmdDelete.zorder(0)
+Gui.frmPartRouterDelete.cmdDelete.position(240,5205)
+Gui.frmPartRouterDelete.cmdDelete.enabled(True)
+Gui.frmPartRouterDelete.cmdDelete.fontname("Arial")
+Gui.frmPartRouterDelete.cmdDelete.fontsize(8)
+Gui.frmPartRouterDelete.cmdDelete.event(Click,cmddelete_click)
+Gui.frmPartRouterDelete.cmdDelete.defaultvalue("")
+Gui.frmPartRouterDelete.cmdDelete.controlgroup(0)
+Gui.frmPartRouterDelete.cmdDelete.Anchor(6)
+Gui.frmPartRouterDelete.gsgcParts.Create(GsGridControl)
+Gui.frmPartRouterDelete.gsgcParts.Enabled(True)
+Gui.frmPartRouterDelete.gsgcParts.Visible(True)
+Gui.frmPartRouterDelete.gsgcParts.Zorder(0)
+Gui.frmPartRouterDelete.gsgcParts.Size(10905,5085)
+Gui.frmPartRouterDelete.gsgcParts.Position(135,75)
+Gui.frmPartRouterDelete.gsgcParts.Anchor(15)
+Gui.frmPartRouterDelete.gsgcParts.Event(RowCellClick,gsgcParts_RowCellClick)
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+V.Global.sparent.Declare
+Program.External.Include.Library("3500.lib")
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+F.Intrinsic.Control.SetErrorHandler("Main_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String,"")
+
+F.Intrinsic.Control.CallSub(Get_Data)
+F.Intrinsic.Control.CallSub(Set_Prop)
+
+Gui.frmPartRouterDelete..Show
+Gui.frmPartRouterDelete..AlwaysOnTop(True)
+Gui.frmPartRouterDelete..AlwaysOnTop(False)
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Main_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.String.Build("Project: GCG_6761_PART_ROUTER_DELETE.g2u {0}{0}Subroutine: {1}{0}Error Occurred {2} with description {3}",V.Ambient.NewLine,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(frmPartRouterDelete_unload)
+Function.Intrinsic.Control.EndIf
+Program.Sub.Main.End
+
+Program.Sub.cmddelete_click.Start
+F.Intrinsic.Control.SetErrorHandler("cmddelete_click_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String,"")
+V.Local.iValue.Declare(Long,0)
+V.Local.sPart.Declare(String,"")
+v.Local.sLoc.Declare(String,"")
+V.Local.i.Declare(Long,0)
+V.Local.sSql.Declare(String,"")
+	
+F.Intrinsic.UI.Msgbox("Are you sure you want to delete the Part, Router for selcted Router(s)?","Are you sure?",4,V.Local.iValue)
+
+Gui.frmPartRouterDelete..Enabled(False)
+
+F.Intrinsic.Control.If(V.Local.iValue,=,6)
+	F.ODBC.Connection!con.OpenCompanyConnection
+	
+	F.Intrinsic.UI.InvokeWaitDialog("Please Wait")
+	F.Data.DataView.Create("dt","Vdt",22,"Selection = True","")
+	F.Intrinsic.Control.For(V.Local.i,0,v.DataView.dt!Vdt.RowCount--,1)
+		v.Local.sPart.Set(v.DataView.dt!Vdt(v.Local.i).Router!FIELDVALTRIM)
+		v.Local.sLoc.Set(v.DataView.dt!Vdt(v.Local.i).Location!FIELDVALTRIM)
+		'Delete
+		f.Data.DataTable.AddRow("3500","CompanyCode",v.Caller.CompanyCode,"Mode","D","Switch2","N","Part",v.Local.sPart,"Loc",v.Local.sLoc)
+		f.Intrinsic.Control.CallSub(3500Sync)
+		
+		'Delete Router
+		F.Intrinsic.String.Build("DELETE FROM ROUTER_HEADER WHERE ROUTER = '{0}'",V.Local.sPart,V.Local.sSql)
+		F.ODBC.connection!con.Execute(V.Local.sSql)
+		
+		F.Intrinsic.String.Build("DELETE FROM ROUTER_LINE WHERE ROUTER = '{0}'",V.Local.sPart,V.Local.sSql)
+		F.ODBC.Connection!con.Execute(V.Local.sSql)
+		
+		F.Intrinsic.String.Build("DELETE FROM ROUTER_DESC WHERE ROUTER = '{0}'",V.Local.sPart,V.Local.sSql)
+		F.ODBC.Connection!con.Execute(V.Local.sSql)
+		
+		F.Intrinsic.String.Build("DELETE FROM ROUTER_CHANGES WHERE ROUTER = '{0}'",V.Local.sPart,V.Local.sSql)
+		F.ODBC.Connection!con.Execute(V.Local.sSql)
+		
+		F.Intrinsic.String.Build("DELETE FROM ROUTER_OP_CODES WHERE ROUTER = '{0}'",V.Local.sPart,V.Local.sSql)
+		F.ODBC.Connection!con.Execute(V.Local.sSql)
+		
+		F.Intrinsic.String.Build("DELETE FROM ROUTER_SUPP_HDR WHERE RTR_NUM = '{0}'",V.Local.sPart,V.Local.sSql)
+		F.ODBC.Connection!con.Execute(V.Local.sSql)
+		
+		F.Intrinsic.String.Build("DELETE FROM ROUTER_SUPP_LINE WHERE RTR_NUM = '{0}'",V.Local.sPart,V.Local.sSql)
+		F.ODBC.Connection!con.Execute(V.Local.sSql)
+		
+		F.Intrinsic.String.Build("DELETE FROM ROUTER_XREF WHERE ROUTER = '{0}'",V.Local.sPart,V.Local.sSql)
+		F.ODBC.Connection!con.Execute(V.Local.sSql)
+	F.Intrinsic.Control.Next(V.Local.i)
+	F.Data.DataView.Close("dt","Vdt")
+	
+	F.ODBC.Connection!Con.Close
+	
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.UI.CloseWaitDialog
+
+F.Intrinsic.Control.CallSub(Get_Data)
+F.Intrinsic.Control.CallSub(Set_Prop)
+
+Gui.frmPartRouterDelete..Enabled(True)
+
+Gui.frmPartRouterDelete..AlwaysOnTop(True)
+Gui.frmPartRouterDelete..AlwaysOnTop(False)
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("cmddelete_click_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.String.Build("Project: GCG_6761_PART_ROUTER_DELETE.g2u {0}{0}Subroutine: {1}{0}Error Occurred {2} with description {3}",V.Ambient.NewLine,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(frmPartRouterDelete_unload)
+Function.Intrinsic.Control.EndIf
+Program.Sub.cmddelete_click.End
+
+Program.Sub.frmPartRouterDelete_unload.Start
+F.Intrinsic.Control.SetErrorHandler("frmPartRouterDelete_unload_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String,"")
+
+F.Intrinsic.Control.End
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("frmPartRouterDelete_unload_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.String.Build("Project: GCG_6761_PART_ROUTER_DELETE.g2u {0}{0}Subroutine: {1}{0}Error Occurred {2} with description {3}",V.Ambient.NewLine,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(frmPartRouterDelete_unload)
+Function.Intrinsic.Control.EndIf
+Program.Sub.frmPartRouterDelete_unload.End
+
+Program.Sub.Get_Data.Start
+F.Intrinsic.Control.SetErrorHandler("Get_Data_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String,"")
+
+F.ODBC.Connection!con.OpenCompanyConnection
+
+F.Intrinsic.Control.If(V.DataTable.dt.Exists)
+	F.Data.Datatable.Close("dt")
+F.Intrinsic.Control.EndIf
+
+f.Data.DataTable.CreateFromSQL("dt","con","Select Cast (0 as bit) as Selection, Router, Location, Description_Router, Prod_Line, a.UM_Inventory, Qty_OnHand, (Select Top 1 Date_Due From V_Job_Header JH Where JH.Part = a.Router Order by Date_Due Desc) as Last_Used From V_Router_Header a Left Join Inventory_Mstr b on a.Router = b.Part Order by a.Router;",true)
+
+F.ODBC.Connection!Con.Close
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Get_Data_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.String.Build("Project: GCG_6761_PART_ROUTER_DELETE.g2u {0}{0}Subroutine: {1}{0}Error Occurred {2} with description {3}",V.Ambient.NewLine,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(frmPartRouterDelete_unload)
+Function.Intrinsic.Control.EndIf
+Program.Sub.Get_Data.End
+
+Program.Sub.Set_Prop.Start
+F.Intrinsic.Control.SetErrorHandler("Set_Prop_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String,"")
+
+gui.frmPartRouterDelete.gsgcParts.AddGridviewFromDatatable("gv","dt")
+gui.frmPartRouterDelete.gsgcParts.SetGridviewProperty("gv", "OptionsViewColumnAutoWidth", True)
+gui.frmPartRouterDelete.gsgcParts.SetGridviewProperty("gv","ShowGroupPanel",True)
+Gui.frmPartRouterDelete.gsgcParts.SetGridViewProperty("gv","OptionsViewShowAutoFilterRow",True)
+
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Selection","ReadOnly",True)
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Selection","AllowEdit",False)
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Selection","Caption","Select")
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Selection","MaxWidth","50")
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Selection","headerforecolor", v.Color.PRI-GSS-00)
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Selection","headerfontbold", True)
+
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Router","ReadOnly",True)
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Router","AllowEdit",False)
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Router","Caption","Router")
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Router","Width","110")
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Router","MaxWidth","110")
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Router","headerforecolor", v.Color.PRI-GSS-00)
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Router","headerfontbold", True)
+
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Location","ReadOnly",True)
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Location","AllowEdit",False)
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Location","Visible",False)
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Location","Caption","Location")
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Location","MaxWidth","50")
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Location","headerforecolor", v.Color.PRI-GSS-00)
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Location","headerfontbold", True)
+
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Description_Router","ReadOnly",True)
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Description_Router","AllowEdit",False)
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Description_Router","Caption","Description")
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Description_Router","headerforecolor", v.Color.PRI-GSS-00)
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Description_Router","headerfontbold", True)
+
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Prod_Line","ReadOnly",True)
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Prod_Line","AllowEdit",False)
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Prod_Line","Caption","PL")
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Prod_Line","MaxWidth","50")
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Prod_Line","headerforecolor", v.Color.PRI-GSS-00)
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Prod_Line","headerfontbold", True)
+
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","UM_Inventory","ReadOnly",True)
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","UM_Inventory","AllowEdit",False)
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","UM_Inventory","Caption","UM")
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","UM_Inventory","headerforecolor", v.Color.PRI-GSS-00)
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","UM_Inventory","MaxWidth","50")
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","UM_Inventory","headerfontbold", True)
+
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Qty_OnHand","ReadOnly",True)
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Qty_OnHand","AllowEdit",False)
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Qty_OnHand","Caption","Qty OnHand")
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Qty_OnHand","headerforecolor", v.Color.PRI-GSS-00)
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Qty_OnHand","headerfontbold", True)
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Qty_OnHand","MaxWidth","90")
+Gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Qty_OnHand","EditMask","#,###,##0.00")
+
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Last_Used","ReadOnly",True)
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Last_Used","AllowEdit",False)
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Last_Used","Caption","Last Used")
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Last_Used","headerforecolor", v.Color.PRI-GSS-00)
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Last_Used","headerfontbold", True)
+gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Last_Used","MaxWidth","75")
+Gui.frmPartRouterDelete.gsgcParts.SetColumnProperty("gv","Last_Used","DisplayCustomDatetime","d")
+
+Gui.frmPartRouterDelete.gsgcParts.MainView("gv")
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Set_Prop_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.String.Build("Project: GCG_6761_PART_ROUTER_DELETE.g2u {0}{0}Subroutine: {1}{0}Error Occurred {2} with description {3}",V.Ambient.NewLine,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(frmPartRouterDelete_unload)
+Function.Intrinsic.Control.EndIf
+Program.Sub.Set_Prop.End
+
+Program.Sub.gsgcParts_RowCellClick.Start
+F.Intrinsic.Control.SetErrorHandler("gsgcParts_RowCellClick_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String,"")
+V.Local.sQty.Declare(String,"")
+V.Local.iCol.Declare(Long,0)
+
+F.Intrinsic.Control.If(V.Args.Column.UCase,=,"SELECTION")
+	Gui.frmPartRouterDelete.gsgcParts.GetColumnIndexByName("gv","Qty_OnHand",V.Local.iCol)
+	Gui.frmPartRouterDelete.gsgcParts.GetCellValue("gv",V.Local.iCol,V.Args.RowIndex,V.Local.sQty)
+	F.Intrinsic.Control.If(V.Local.sQty.Float,=,0)
+		F.Data.Datatable.SetValue("dt",V.Args.RowIndex,"Selection",V.Datatable.dt(V.Args.RowIndex).Selection!FieldValNot)
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("gsgcParts_RowCellClick_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.String.Build("Project: GCG_6761_PART_ROUTER_DELETE.g2u {0}{0}Subroutine: {1}{0}Error Occurred {2} with description {3}",V.Ambient.NewLine,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(frmPartRouterDelete_unload)
+Function.Intrinsic.Control.EndIf
+Program.Sub.gsgcParts_RowCellClick.End
+
+Program.Sub.Comments.Start
+${$0$}$CON_PART_BOM_ROUTER_DELETE$}$SUPERVSR$}$26/11/2015
+${$5$}$2.0.0.0$}$2
+${$6$}$rking$}$20220613125217081$}$QNdZLVy4bWuiWa9jh1ZTiKVzNnEzrvL4Gjut/SIP7Ddn+43iuOEv9H8xtW7xY7ilqRAffix1gtQ=
+Program.Sub.Comments.End
+
