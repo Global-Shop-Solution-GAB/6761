@@ -1,0 +1,97 @@
+﻿Program.Sub.Preflight.Start
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+f.Intrinsic.Control.Try
+	v.Local.sXML.Declare(String)
+	v.Local.sSql.Declare(String)
+	v.Local.sError.Declare(String)
+	v.Local.bUseRevision.Declare(Boolean)
+	V.Local.bOpen.Declare(Boolean,False)
+	
+	F.Intrinsic.Control.SelectCase(V.Caller.Hook)
+		F.Intrinsic.Control.Case("55300")
+			'Create the cache browser file
+			f.Intrinsic.Control.If(v.DataTable.dtInventoryBrowser.Exists)
+				f.Data.Datatable.Close("dtInventoryBrowser")
+			f.Intrinsic.Control.EndIf
+			
+			'Get whether using Revision Level
+			F.Global.General.ReadOption(70008,0,False,0,v.Local.bUseRevision)
+		
+			'Open database connection
+			f.ODBC.Connection!con.OpenCompanyConnection(120)
+			V.Local.bOpen.Set(True)
+			
+			'Generate InventoryBrowser XML file
+			f.Intrinsic.Control.If(V.Local.bUseRevision)
+				v.Local.sSql.Set("select DISTINCT SUBSTRING(VIA.PART, 1, 17) AS 'PartNumber', SUBSTRING(VIA.PART, 18, 3) AS 'PartNumberRevision', VIA.LOCATION AS 'LocationCode', VIA.DESCRIPTION AS 'Description', VIA.Description_3 AS 'Alt Description 2', RTRIM(CONVERT(REPLACE(REPLACE(REPLACE(VIET.TEXT,Char(10),' '),Char(13),' '),Char(9),' '),SQL_VARCHAR,1000)) AS 'Extra Description', CASE WHEN VIA.CODE_SOURCE = 'M' THEN 'MS' WHEN VIA.CODE_SOURCE = 'F' THEN 'MJ' WHEN VIA.CODE_SOURCE = 'P' THEN 'PS' WHEN VIA.CODE_SOURCE = 'J' THEN 'PJ' WHEN VIA.CODE_SOURCE = 'C' THEN 'CS' WHEN VIA.CODE_SOURCE = 'G' THEN 'CJ' END AS 'Source Code', VIA.UM_INVENTORY As 'Unit Of Measure Code', VIA.PRODUCT_LINE As 'Product Line', VIA.CODE_SORT As 'Sort Code', CASE WHEN VIA.FLAG_INACTIVE = 'Y' THEN CONVERT(1,SQL_BIT) WHEN VIA.FLAG_INACTIVE <> 'Y' THEN CONVERT(0,SQL_BIT) END AS 'Is Inactive', VIA.QTY_ONHAND As 'On Hand', SUBSTRING(VIA.PART, 1, 17) AS 'PartNumberKey', SUBSTRING(VIA.PART, 18, 3) AS 'PartNumberKeyRevision' from V_INVENTORY_ALL VIA LEFT JOIN V_INV_EXTRA_TEXT VIET ON VIA.PART = VIET.PART order by VIA.PART, VIA.LOCATION;")	
+			f.Intrinsic.Control.Else
+				v.Local.sSql.Set("select DISTINCT VIA.PART AS 'PartNumber', VIA.LOCATION AS 'LocationCode', VIA.DESCRIPTION AS 'Description', VIA.Description_3 AS 'Alt Description 2', RTRIM(CONVERT(REPLACE(REPLACE(REPLACE(VIET.TEXT,Char(10),' '),Char(13),' '),Char(9),' '),SQL_VARCHAR,1000)) AS 'Extra Description', CASE WHEN VIA.CODE_SOURCE = 'M' THEN 'MS' WHEN VIA.CODE_SOURCE = 'F' THEN 'MJ' WHEN VIA.CODE_SOURCE = 'P' THEN 'PS' WHEN VIA.CODE_SOURCE = 'J' THEN 'PJ' WHEN VIA.CODE_SOURCE = 'C' THEN 'CS' WHEN VIA.CODE_SOURCE = 'G' THEN 'CJ' END AS 'Source Code', VIA.UM_INVENTORY As 'Unit Of Measure Code', VIA.PRODUCT_LINE As 'Product Line', VIA.CODE_SORT As 'Sort Code', CASE WHEN VIA.FLAG_INACTIVE = 'Y' THEN CONVERT(1,SQL_BIT) WHEN VIA.FLAG_INACTIVE <> 'Y' THEN CONVERT(0,SQL_BIT) END AS 'Is Inactive', VIA.QTY_ONHAND As 'On Hand', VIA.PART As 'PartNumberKey' from V_INVENTORY_ALL VIA LEFT JOIN V_INV_EXTRA_TEXT VIET ON VIA.PART = VIET.PART order by VIA.PART, VIA.LOCATION;")	
+			f.Intrinsic.Control.EndIf
+			f.Data.DataTable.CreateFromSQL("dtInventoryBrowser","con",V.Local.sSql)
+			f.Global.object.ExportTOMessagePackFile(v.Local.sXML,"dtInventoryBrowser")
+			F.Data.DataTable.Close("dtInventoryBrowser")
+			
+			'Close database connection
+			f.Intrinsic.Control.If(V.Local.bOpen)
+				f.ODBC.Connection!con.close
+				V.Local.bOpen.Set(False)
+			f.Intrinsic.Control.EndIf
+			
+			'Set to the Standar Part Lookup in new S&D screen (Hook: 55300)
+			v.Passed.Title.Set("Inventory Standard Browser (6761)")
+			v.Passed.FilePath.Set(v.Local.sXML)
+		
+		F.Intrinsic.Control.Case("55301")
+			f.Intrinsic.Control.If(v.DataTable.dtInventoryXrefBrowser.Exists)
+				f.Data.Datatable.Close("dtInventoryXrefBrowser")
+			f.Intrinsic.Control.EndIf
+			
+			'Get whether using Revision Level
+			F.Global.General.ReadOption(70008,0,False,0,v.Local.bUseRevision)
+		
+			'Open database connection
+			f.ODBC.Connection!con.OpenCompanyConnection(120)
+			V.Local.bOpen.Set(True)
+			
+			'Generate InventoryBrowser XML file	
+			f.Intrinsic.Control.If(V.Local.bUseRevision)
+				v.Local.sSql.Set("select DISTINCT SUBSTRING(VIA.PART, 1, 17) AS 'PartNumber', SUBSTRING(VIA.PART, 18, 3) AS 'PartNumberRevision', VIA.LOCATION AS 'LocationCode', VIA.DESCRIPTION AS 'Description', VIA.Description_3 AS 'Alt Description 2', RTRIM(CONVERT(REPLACE(REPLACE(REPLACE(VIET.TEXT,Char(10),' '),Char(13),' '),Char(9),' '),SQL_VARCHAR,1000)) AS 'Extra Description', VICR.CUSTOMER_PART As 'Customer Part No', VICR.CUSTOMER As 'Customer Number', VCM.NAME_CUSTOMER As 'Customer Name', VICR.MFG_PART As 'Manufacturer Part Number', VICR.MFG_NAME As 'Manufacturer Part Name', VICR.VENDOR As 'Vendor Number', VVM.NAME_VENDOR As 'Vendor Name', VICR.USER_DEFINED_PART As 'User Field', CASE WHEN VIA.CODE_SOURCE = 'M' THEN 'MS' WHEN VIA.CODE_SOURCE = 'F' THEN 'MJ' WHEN VIA.CODE_SOURCE = 'P' THEN 'PS' WHEN VIA.CODE_SOURCE = 'J' THEN 'PJ' WHEN VIA.CODE_SOURCE = 'C' THEN 'CS' WHEN VIA.CODE_SOURCE = 'G' THEN 'CJ' END AS 'Source Code', VIA.UM_INVENTORY As 'Unit Of Measure Code', VIA.PRODUCT_LINE As 'Product Line', VIA.CODE_SORT As 'Sort Code', CASE WHEN VIA.FLAG_INACTIVE = 'Y' THEN CONVERT(1,SQL_BIT) WHEN VIA.FLAG_INACTIVE <> 'Y' THEN CONVERT(0,SQL_BIT) END AS 'Is Inactive', VIA.QTY_ONHAND As 'On Hand', SUBSTRING(VIA.PART, 1, 17) AS 'ShortPartNumber', SUBSTRING(VIA.PART, 18, 3) AS 'ShortPartNumberRevision' from V_INVENTORY_ALL VIA LEFT JOIN V_INV_EXTRA_TEXT VIET ON VIA.PART = VIET.PART LEFT JOIN V_INV_CROSS_REF VICR ON VIA.PART = VICR.PART AND VIA.LOCATION = VICR.LOCATION LEFT JOIN V_CUSTOMER_MASTER VCM ON VCM.CUSTOMER = VICR.CUSTOMER LEFT JOIN V_VENDOR_MASTER VVM ON VVM.VENDOR = VICR.VENDOR order by VIA.Part, VIA.LOCATION;")		
+			f.Intrinsic.Control.Else
+				v.Local.sSql.Set("select DISTINCT VIA.PART AS 'PartNumber', VIA.LOCATION AS 'LocationCode', VIA.DESCRIPTION AS 'Description', VIA.Description_3 AS 'Alt Description 2', RTRIM(CONVERT(REPLACE(REPLACE(REPLACE(VIET.TEXT,Char(10),' '),Char(13),' '),Char(9),' '),SQL_VARCHAR,1000)) AS 'Extra Description', VICR.CUSTOMER_PART As 'Customer Part No', VICR.CUSTOMER As 'Customer Number', VCM.NAME_CUSTOMER As 'Customer Name', VICR.MFG_PART As 'Manufacturer Part Number', VICR.MFG_NAME As 'Manufacturer Part Name', VICR.VENDOR As 'Vendor Number', VVM.NAME_VENDOR As 'Vendor Name', VICR.USER_DEFINED_PART As 'User Field', CASE WHEN VIA.CODE_SOURCE = 'M' THEN 'MS' WHEN VIA.CODE_SOURCE = 'F' THEN 'MJ' WHEN VIA.CODE_SOURCE = 'P' THEN 'PS' WHEN VIA.CODE_SOURCE = 'J' THEN 'PJ' WHEN VIA.CODE_SOURCE = 'C' THEN 'CS' WHEN VIA.CODE_SOURCE = 'G' THEN 'CJ' END AS 'Source Code', VIA.UM_INVENTORY As 'Unit Of Measure Code', VIA.PRODUCT_LINE As 'Product Line', VIA.CODE_SORT As 'Sort Code', CASE WHEN VIA.FLAG_INACTIVE = 'Y' THEN CONVERT(1,SQL_BIT) WHEN VIA.FLAG_INACTIVE <> 'Y' THEN CONVERT(0,SQL_BIT) END AS 'Is Inactive', VIA.QTY_ONHAND As 'On Hand', VIA.PART As 'ShortPartNumber' from V_INVENTORY_ALL VIA LEFT JOIN V_INV_EXTRA_TEXT VIET ON VIA.PART = VIET.PART LEFT JOIN V_INV_CROSS_REF VICR ON VIA.PART = VICR.PART AND VIA.LOCATION = VICR.LOCATION LEFT JOIN V_CUSTOMER_MASTER VCM ON VCM.CUSTOMER = VICR.CUSTOMER LEFT JOIN V_VENDOR_MASTER VVM ON VVM.VENDOR = VICR.VENDOR order by VIA.Part, VIA.LOCATION;")		
+			f.Intrinsic.Control.EndIf
+			
+			f.Data.DataTable.CreateFromSQL("dtInventoryXrefBrowser","con",V.Local.sSql)
+			f.Global.object.ExportTOMessagePackFile(v.Local.sXML,"dtInventoryXrefBrowser")
+			F.Data.DataTable.Close("dtInventoryXrefBrowser")
+			
+			'Close database connection
+			f.Intrinsic.Control.If(V.Local.bOpen)
+				f.ODBC.Connection!con.close
+				V.Local.bOpen.Set(False)
+			f.Intrinsic.Control.EndIf
+		
+			'Set to the Iventory Cross Reference Part Lookup in new S&D screen (Hook: 55301)
+			v.Passed.Title.Set("Inventory Cross Reference Browser (6761)")
+			v.Passed.FilePath.Set(v.Local.sXML)
+			
+	F.Intrinsic.Control.EndSelect
+	
+	f.Intrinsic.Control.End
+
+f.Intrinsic.Control.Catch
+	f.Intrinsic.String.Build("Project: {0}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}GAB Version: {5}}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	f.Intrinsic.UI.Msgbox(V.Local.sError)
+	f.Intrinsic.Control.If(V.Local.bOpen)
+		f.ODBC.Connection!con.close
+		V.Local.bOpen.Set(False)
+	f.Intrinsic.Control.EndIf
+	f.Intrinsic.Control.End
+f.Intrinsic.Control.EndTry
+Program.Sub.Main.End
+
+Program.Sub.Comments.Start
+${$5$}$20.1.8413.19752$}$1
+${$6$}$rking$}$20230315130944071$}$QNdZLVy4bWuiWa9jh1ZTiKHvMPldSPXeE31FLjFv2LNuyVHU5J6imIwd2YqFvRv4Il7WTW/Huos=
+Program.Sub.Comments.End
