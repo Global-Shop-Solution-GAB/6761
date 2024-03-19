@@ -1,0 +1,364 @@
+﻿Program.Sub.ScreenSU.Start
+Gui.FormRMaint..Create(DashForm)
+Gui.FormRMaint..Caption("")
+Gui.FormRMaint..Size(1194,720)
+Gui.FormRMaint..MinX(0)
+Gui.FormRMaint..MinY(0)
+Gui.FormRMaint..Position(0,0)
+Gui.FormRMaint..MousePointer(0)
+Gui.FormRMaint..BarHelpButton(True,"","","",1.0.0.0,"3/23/2022 3:42:27 PM","",0,0,False)
+Gui.FormRMaint..AlwaysOnTop(False)
+Gui.FormRMaint..FontName("Tahoma")
+Gui.FormRMaint..FontSize(8.25)
+Gui.FormRMaint..ControlBox(True)
+Gui.FormRMaint..MaxButton(True)
+Gui.FormRMaint..MinButton(True)
+Gui.FormRMaint..Moveable(True)
+Gui.FormRMaint..Sizeable(True)
+Gui.FormRMaint..ShowInTaskBar(True)
+Gui.FormRMaint..TitleBar(True)
+Gui.FormRMaint..Event(UnLoad,FormRMaint_UnLoad)
+Gui.FormRMaint..BarSaveButton(True,False)
+Gui.FormRMaint..Event(SaveButtonClick,FormRMaint_SaveButtonClick)
+Gui.FormRMaint.GsGridTempRout.Create(GsGridControl)
+Gui.FormRMaint.GsGridTempRout.Enabled(True)
+Gui.FormRMaint.GsGridTempRout.Visible(True)
+Gui.FormRMaint.GsGridTempRout.Zorder(0)
+Gui.FormRMaint.GsGridTempRout.Size(1194,566)
+Gui.FormRMaint.GsGridTempRout.Position(0,89)
+Gui.FormRMaint.GsGridTempRout.Dock(0)
+Gui.FormRMaint.GsGridTempRout.Anchor(15)
+Gui.FormRMaint.txt1.Create(TextBox,"",True,100,20,0,1193,6,True,0,"Tahoma",8.25,,1)
+Gui.FormRMaint.txt1.Anchor(9)
+Gui.FormRMaint.lblMatLen.Create(Label,"Material Length (Inches)",True,117,13,0,9,5,True,0,"Tahoma",8.25,,0,0)
+Gui.FormRMaint.lblMatLen.BorderStyle(0)
+Gui.FormRMaint.txtMatLen.Create(TextBox,"",True,67,20,0,6,24,True,0,"Tahoma",8.25,,1)
+Gui.FormRMaint.txtMatLen.NumericOnly(1)
+Gui.FormRMaint.lblMatWid.Create(Label,"Material Width (Inches)",True,112,13,0,7,47,True,0,"Tahoma",8.25,,0,0)
+Gui.FormRMaint.lblMatWid.BorderStyle(0)
+Gui.FormRMaint.txtMatWid.Create(TextBox,"",True,67,20,0,4,66,True,0,"Tahoma",8.25,,1)
+Gui.FormRMaint.txtMatWid.NumericOnly(1)
+Gui.FormRMaint.txtCutWid.Create(TextBox,"",True,67,20,0,141,66,True,0,"Tahoma",8.25,,1)
+Gui.FormRMaint.txtCutWid.NumericOnly(1)
+Gui.FormRMaint.lblCutWid.Create(Label,"Cut Width (Inches)",True,91,13,0,144,47,True,0,"Tahoma",8.25,,0,0)
+Gui.FormRMaint.lblCutWid.BorderStyle(0)
+Gui.FormRMaint.txtCutLen.Create(TextBox,"",True,67,20,0,143,24,True,0,"Tahoma",8.25,,1)
+Gui.FormRMaint.txtCutLen.NumericOnly(1)
+Gui.FormRMaint.lblCutLen.Create(Label,"Cut Length (Inches)",True,96,13,0,146,5,True,0,"Tahoma",8.25,,0,0)
+Gui.FormRMaint.lblCutLen.BorderStyle(0)
+Gui.FormRMaint.lblCutHeight.Create(Label,"Cut Height (Inches)",True,94,13,0,276,5,True,0,"Tahoma",8.25,,0,0)
+Gui.FormRMaint.lblCutHeight.BorderStyle(0)
+Gui.FormRMaint.txtCutHeight.Create(TextBox,"",True,67,20,0,273,24,True,0,"Tahoma",8.25,,1)
+Gui.FormRMaint.txtCutHeight.NumericOnly(1)
+Gui.FormRMaint.lblCutFormula.Create(Label,"Cut Formula",True,58,13,0,274,47,True,0,"Tahoma",8.25,,0,0)
+Gui.FormRMaint.lblCutFormula.BorderStyle(0)
+Gui.FormRMaint.txtCutForm.Create(TextBox,"([CP]*(([CL]+2.25)+([CH]-5.5)))/[ML]",True,392,20,0,271,66,True,0,"Tahoma",8.25,,1)
+Gui.FormRMaint.txtCutForm.DefaultValue("")
+Gui.FormRMaint.cmdCheck.Create(Button)
+Gui.FormRMaint.cmdCheck.Enabled(True)
+Gui.FormRMaint.cmdCheck.Visible(True)
+Gui.FormRMaint.cmdCheck.Zorder(0)
+Gui.FormRMaint.cmdCheck.Size(102,23)
+Gui.FormRMaint.cmdCheck.Position(451,22)
+Gui.FormRMaint.cmdCheck.Caption("Check Formula")
+Gui.FormRMaint.cmdCheck.FontName("Tahoma")
+Gui.FormRMaint.cmdCheck.FontSize(8.25)
+Gui.FormRMaint.cmdCheck.Event(Click,cmdCheck_Click)
+Gui.FormRMaint.lblCutValue.Create(Label,"Formula Result",True,78,13,0,565,5,True,0,"Tahoma",8.25,,0,0)
+Gui.FormRMaint.lblCutValue.BorderStyle(0)
+Gui.FormRMaint.txtCutValue.Create(TextBox,"",True,100,20,0,563,24,True,0,"Tahoma",8.25,,1)
+Gui.FormRMaint.lblPlaceholder.Create(Label,"Placeholders",True,60,13,0,681,4,True,0,"Tahoma",8.25,,0,0)
+Gui.FormRMaint.lblPlaceholder.BorderStyle(0)
+Gui.FormRMaint.lbl1.Create(Label,"[ML] = Material Length",True,109,13,0,690,19,True,0,"Tahoma",8.25,,0,0)
+Gui.FormRMaint.lbl1.BorderStyle(0)
+Gui.FormRMaint.lbl2.Create(Label,"[MW] = Material Width",True,109,13,0,690,36,True,0,"Tahoma",8.25,,0,0)
+Gui.FormRMaint.lbl2.BorderStyle(0)
+Gui.FormRMaint.lbl3.Create(Label,"[CL] = Cut Length",True,87,13,0,806,36,True,0,"Tahoma",8.25,,0,0)
+Gui.FormRMaint.lbl3.BorderStyle(0)
+Gui.FormRMaint.lbl4.Create(Label,"[CW] = Cut Width",True,87,13,0,806,54,True,0,"Tahoma",8.25,,0,0)
+Gui.FormRMaint.lbl4.BorderStyle(0)
+Gui.FormRMaint.lbl5.Create(Label,"[CH] = Cut Height",True,87,13,0,806,19,True,0,"Tahoma",8.25,,0,0)
+Gui.FormRMaint.lbl5.BorderStyle(0)
+Gui.FormRMaint.lbl6.Create(Label,"[SF] = Sq Ft",True,59,13,0,690,54,True,0,"Tahoma",8.25,,0,0)
+Gui.FormRMaint.lbl6.BorderStyle(0)
+Gui.FormRMaint.lbl7.Create(Label,"[CP] = Cut Pieces",True,85,13,0,806,72,True,0,"Tahoma",8.25,,0,0)
+Gui.FormRMaint.lbl7.BorderStyle(0)
+Gui.FormRMaint.lblExample.Create(Label,"Example",True,40,13,0,918,3,True,0,"Tahoma",8.25,,0,0)
+Gui.FormRMaint.lblExample.BorderStyle(0)
+Gui.FormRMaint.lbl8.Create(Label,"([CP]*(([CL]+2.25)+([CH]-5.5)))/[ML]",True,184,13,0,922,19,True,0,"Tahoma",8.25,,0,0)
+Gui.FormRMaint.lbl8.BorderStyle(0)
+Gui.FormRMaint.lbl9.Create(Label,"BASE B supported Place Holders [ML],[MW],[SF]",True,184,13,0,922,36,True,0,"Tahoma",8.25,,0,0)
+Gui.FormRMaint.lbl9.BorderStyle(0)
+Gui.FormRMaint.lbl10.Create(Label,"[BASE B] = Base Bottom",True,109,13,0,680,72,True,0,"Tahoma",8.25,,0,0)
+Gui.FormRMaint.lbl10.BorderStyle(0)
+Gui.FormRMaint.lbl11.Create(Label,"[BASE R] = Base Runner",True,109,13,0,900,72,True,0,"Tahoma",8.25,,0,0)
+Gui.FormRMaint.lbl11.BorderStyle(0)
+Gui.FormRMaint.lblCutPieces.Create(Label,"Cut Pieces",True,50,13,0,375,5,True,0,"Tahoma",8.25,,0,0)
+Gui.FormRMaint.lblCutPieces.BorderStyle(0)
+Gui.FormRMaint.txtCutPieces.Create(TextBox,"",True,67,20,0,372,24,True,0,"Tahoma",8.25,,1)
+Gui.FormRMaint.txtCutPieces.NumericOnly(1)
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+Program.Sub.Preflight.End
+Program.Sub.Main.Start
+F.Intrinsic.Control.SetErrorHandler("Get_Data_Err")
+F.Intrinsic.Control.ClearErrors
+
+
+'Note.  txt1 box is pushed to the side of the screen and not visible to user.  this box in used for when the user clicks save so the program can set focus to that txt box in the scenario
+' of if the user makes a change to a row but havent lost focus to that row.  Without loosing focus to that row the dt Row status never gets updated to indicate there was a change to that row
+' the reason behind why the row state needs to be updated is I am only saving rows that have been changed 
+V.Local.sError.Declare(String,"")
+
+Function.Intrinsic.UI.UsePixels ' Allows you to use Pixels instead of Twips throughout
+
+F.Intrinsic.Control.CallSub(Get_data)
+F.Intrinsic.Control.CallSub(Set_Prop)
+
+Gui.FormRMaint..Show
+Gui.FormRMaint..AlwaysOnTop(True)
+Gui.FormRMaint..AlwaysOnTop(False)
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Get_Data_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.String.Build("Project: GCG_6761_Router_Matin.g2u {0}{0}Subroutine: {1}{0}Error Occurred {2} with description {3}",V.Ambient.NewLine,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(FormRMaint_UnLoad)
+Function.Intrinsic.Control.EndIf
+Program.Sub.Main.End
+
+Program.Sub.Get_data.Start
+F.Intrinsic.Control.SetErrorHandler("Get_Data_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String,"")
+V.Local.sSql.Declare(String,"")
+
+F.ODBC.Connection!Con.OpenCompanyConnection
+
+F.Data.Datatable.CreateFromSQL("dtCrates","con","Select a.Router, b.Line_Router, b.Operation as OpCode, rtrim(b.Part_WC_Outside) as Material, rtrim(c.Dim1Form) as Dim1Form, rtrim(c.Dim1Qty) as Dim1Qty, rtrim(c.Dim2Form) as Dim2Form, rtrim(c.Dim2Qty) as Dim2Qty From V_Router_Header a Left Join V_Router_Line b on a.Router = b.Router Left Join GCG_6761_Crate_Maint c on b.Router = c.Router and b.Line_Router = c.Line_Router Where SORT_1 like '%TEMPLATE%' and b.LMO = 'M' Order by a.Router,b.Line_Router",True)
+
+F.ODBC.Connection!Con.Close
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Get_Data_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.String.Build("Project: GCG_6761_Router_Matin.g2u {0}{0}Subroutine: {1}{0}Error Occurred {2} with description {3}",V.Ambient.NewLine,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(FormRMaint_UnLoad)
+Function.Intrinsic.Control.EndIf
+Program.Sub.Get_data.End
+
+Program.Sub.Set_Prop.Start
+F.Intrinsic.Control.SetErrorHandler("Set_Prop_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String,"")
+
+Gui.FormRMaint.GsGridTempRout.AddGridviewFromDatatable("gvCrates","dtCrates")
+
+gui.FormRMaint.GsGridTempRout.SetGridviewProperty("gvCrates",v.Enum.GridViewPropertyNames!ShowGroupPanel,True)
+gui.FormRMaint.GsGridTempRout.SetGridviewProperty("gvCrates",v.Enum.GridViewPropertyNames!AllowAddRows,False)
+gui.FormRMaint.GsGridTempRout.SetGridviewProperty("gvCrates",v.Enum.GridViewPropertyNames!AllowDeleteRows,False)
+gui.FormRMaint.GsGridTempRout.SetGridviewProperty("gvCrates",v.Enum.GridViewPropertyNames!AllowColumnMoving,False)
+gui.FormRMaint.GsGridTempRout.SetGridviewProperty("gvCrates",v.Enum.GridViewPropertyNames!ColumnAutoWidth,True)
+
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Router",v.Enum.ColumnPropertyNames!GroupIndex,0)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Router",v.Enum.ColumnPropertyNames!Caption,"Router")
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Router",V.Enum.ColumnPropertyNames!HeaderForeColor,v.Color.PRI-GSS-00)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Router",V.Enum.ColumnPropertyNames!HeaderFontBold,True)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Router",V.Enum.ColumnPropertyNames!ReadOnly,True)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Router",V.Enum.ColumnPropertyNames!AllowEdit,False)
+
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Line_Router",v.Enum.ColumnPropertyNames!Caption,"Sequence")
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Line_Router",V.Enum.ColumnPropertyNames!HeaderForeColor,v.Color.PRI-GSS-00)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Line_Router",V.Enum.ColumnPropertyNames!HeaderFontBold,True)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Line_Router",V.Enum.ColumnPropertyNames!ReadOnly,True)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Line_Router",V.Enum.ColumnPropertyNames!AllowEdit,False)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Line_Router",V.Enum.ColumnPropertyNames!Visible,False)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Line_Router",V.Enum.ColumnPropertyNames!AllowShowHide,False)
+
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","OpCode",v.Enum.ColumnPropertyNames!GroupIndex,0)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","OpCode",v.Enum.ColumnPropertyNames!Caption,"Op Code")
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","OpCode",V.Enum.ColumnPropertyNames!HeaderForeColor,v.Color.PRI-GSS-00)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","OpCode",V.Enum.ColumnPropertyNames!HeaderFontBold,True)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","OpCode",V.Enum.ColumnPropertyNames!ReadOnly,True)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","OpCode",V.Enum.ColumnPropertyNames!AllowEdit,False)
+
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Material",v.Enum.ColumnPropertyNames!GroupIndex,0)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Material",v.Enum.ColumnPropertyNames!Caption,"Material")
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Material",V.Enum.ColumnPropertyNames!HeaderForeColor,v.Color.PRI-GSS-00)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Material",V.Enum.ColumnPropertyNames!HeaderFontBold,True)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Material",V.Enum.ColumnPropertyNames!ReadOnly,True)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Material",V.Enum.ColumnPropertyNames!AllowEdit,False)
+
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Dim1Form",v.Enum.ColumnPropertyNames!GroupIndex,0)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Dim1Form",v.Enum.ColumnPropertyNames!Caption,"Dim 1 Cut Formula")
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Dim1Form",V.Enum.ColumnPropertyNames!HeaderForeColor,v.Color.PRI-GSS-00)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Dim1Form",V.Enum.ColumnPropertyNames!HeaderFontBold,True)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Dim1Form",V.Enum.ColumnPropertyNames!ReadOnly,False)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Dim1Form",V.Enum.ColumnPropertyNames!AllowEdit,True)
+
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Dim1Qty",v.Enum.ColumnPropertyNames!GroupIndex,0)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Dim1Qty",v.Enum.ColumnPropertyNames!Caption,"Dim 1 Qty Formula")
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Dim1Qty",V.Enum.ColumnPropertyNames!HeaderForeColor,v.Color.PRI-GSS-00)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Dim1Qty",V.Enum.ColumnPropertyNames!HeaderFontBold,True)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Dim1Qty",V.Enum.ColumnPropertyNames!ReadOnly,False)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Dim1Qty",V.Enum.ColumnPropertyNames!AllowEdit,True)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Dim1Qty",V.Enum.ColumnPropertyNames!CellHAlignment,"center")
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Dim1Qty",V.Enum.ColumnPropertyNames!HeaderHAlignment,"center")
+
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Dim2Form",v.Enum.ColumnPropertyNames!GroupIndex,0)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Dim2Form",v.Enum.ColumnPropertyNames!Caption,"Dim 2 Cut Formula")
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Dim2Form",V.Enum.ColumnPropertyNames!HeaderForeColor,v.Color.PRI-GSS-00)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Dim2Form",V.Enum.ColumnPropertyNames!HeaderFontBold,True)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Dim2Form",V.Enum.ColumnPropertyNames!ReadOnly,False)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Dim2Form",V.Enum.ColumnPropertyNames!AllowEdit,True)
+
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Dim2Qty",v.Enum.ColumnPropertyNames!GroupIndex,0)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Dim2Qty",v.Enum.ColumnPropertyNames!Caption,"Dim 2 Qty Formula")
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Dim2Qty",V.Enum.ColumnPropertyNames!HeaderForeColor,v.Color.PRI-GSS-00)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Dim2Qty",V.Enum.ColumnPropertyNames!HeaderFontBold,True)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Dim2Qty",V.Enum.ColumnPropertyNames!ReadOnly,False)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Dim2Qty",V.Enum.ColumnPropertyNames!AllowEdit,True)
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Dim2Qty",V.Enum.ColumnPropertyNames!CellHAlignment,"center")
+Gui.FormRMaint.GsGridTempRout.SetColumnProperty("gvCrates","Dim2Qty",V.Enum.ColumnPropertyNames!HeaderHAlignment,"center")
+
+gui.FormRMaint.GsGridTempRout.MainView("gvCrates")
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Set_Prop_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.String.Build("Project: GCG_6761_Router_Matin.g2u {0}{0}Subroutine: {1}{0}Error Occurred {2} with description {3}",V.Ambient.NewLine,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(FormRMaint_UnLoad)
+Function.Intrinsic.Control.EndIf
+Program.Sub.Set_Prop.End
+
+Program.Sub.FormRMaint_UnLoad.Start
+F.Intrinsic.Control.SetErrorHandler("FormRMaint_UnLoad_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String,"")
+V.Local.iRet.Declare(Long,0)
+
+Gui.FormRMaint.txt1.SetFocus
+F.Data.DataView.Create("dtCrates","Temp",16,"","")
+F.Intrinsic.Control.If(V.DataView.dtCrates!Temp.RowCount--,<>,-1)
+	F.Intrinsic.UI.Msgbox("Records have been Modified.  Do you want to Save Changes?","Attention",4,V.Local.iRet)
+	F.Intrinsic.Control.If(V.Local.iRet,=,6)
+		F.Intrinsic.Control.CallSub(FormRMaint_SaveButtonClick)
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.EndIf
+F.Data.DataView.Close("dtCrates","Temp")
+
+F.Intrinsic.Control.End
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("FormRMaint_UnLoad_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.Control.End
+Function.Intrinsic.Control.EndIf
+Program.Sub.FormRMaint_UnLoad.End
+
+Program.Sub.FormRMaint_SaveButtonClick.Start
+F.Intrinsic.Control.SetErrorHandler("FormRMaint_SaveButtonClick_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String,"")
+
+Gui.FormRMaint.txt1.SetFocus
+F.Data.DataView.Create("dtCrates","vSave",16,"","")
+F.Data.DataView.ToDataTable("dtCrates","vSave","SaveCrates",True)
+F.Data.DataView.Close("dtCrates","vSave")
+
+F.Data.DataTable.AcceptChanges("dtCrates")
+
+F.Intrinsic.Control.If(V.DataTable.SaveCrates.RowCount--,<>,-1)
+	F.ODBC.Connection!Con.OpenCompanyConnection
+	F.Data.DataTable.SaveToDB("SaveCrates","con","GCG_6761_Crate_Maint","Router*!*Line_Router",256,"Router@!@Router*!*Line_Router@!@Line_Router*!*OpCode@!@OpCode*!*Material@!@Material*!*Dim1Form@!@Dim1Form*!*Dim1Qty@!@Dim1Qty*!*Dim2Form@!@Dim2Form*!*Dim2Qty@!@Dim2Qty")
+	F.ODBC.Connection!con.Close
+F.Intrinsic.Control.EndIf
+
+F.Data.DataTable.Close("SaveCrates")
+
+F.Intrinsic.UI.Msgbox("Updated Records Saved.......")
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("FormRMaint_SaveButtonClick_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.String.Build("Project: GCG_6761_Router_Matin.g2u {0}{0}Subroutine: {1}{0}Error Occurred {2} with description {3}",V.Ambient.NewLine,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(FormRMaint_UnLoad)
+Function.Intrinsic.Control.EndIf
+Program.Sub.FormRMaint_SaveButtonClick.End
+
+Program.Sub.cmdCheck_Click.Start
+V.Local.sError.Declare(String,"")
+V.Local.i.Declare(Long,168)
+V.Local.fRet.Declare(Float,0)
+V.Local.fSF.Declare(Float,0)
+V.Local.fL.Declare(Float,0)
+V.Local.fW.Declare(Float,0)
+V.Local.fCL.Declare(Float,0)
+V.Local.fCW.Declare(Float,0)
+V.Local.fCH.Declare(Float,0)
+V.Local.fCP.Declare(Float,0)
+V.Local.sEval.Declare(String,"")
+V.Local.sTemp.Declare(String,"")
+
+V.Local.fCL.Set(V.Screen.FormRMaint!txtCutLen.Text)
+V.Local.fCW.Set(V.Screen.FormRMaint!txtCutWid.Text)
+V.Local.fCH.Set(V.Screen.FormRMaint!txtCutHeight.Text)
+V.Local.fCP.Set(V.Screen.FormRMaint!txtCutPieces.Text)
+
+F.Intrinsic.Control.If(V.Local.fCP,=,0)
+	Gui.FormRMaint.txtCutValue.Text(0)
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+V.Local.fL.Set(V.Screen.FormRMaint!txtMatLen.Text)
+V.Local.fW.Set(V.Screen.FormRMaint!txtMatWid.Text)
+F.Intrinsic.Math.Mult(V.Local.fL,V.Local.fW,V.Local.fSF)
+V.Local.sEval.Set(V.Screen.FormRMaint!txtCutForm.Text)
+F.Intrinsic.String.Replace(V.Local.sEval,"[CL]",V.Local.fCL,V.Local.sEval)
+F.Intrinsic.String.Replace(V.Local.sEval,"[CW]",V.Local.fCW,V.Local.sEval)
+F.Intrinsic.String.Replace(V.Local.sEval,"[CH]",V.Local.fCH,V.Local.sEval)
+F.Intrinsic.String.Replace(V.Local.sEval,"[ML]",V.Local.fL,V.Local.sEval)
+F.Intrinsic.String.Replace(V.Local.sEval,"[MW]",V.Local.fW,V.Local.sEval)
+F.Intrinsic.String.Replace(V.Local.sEval,"[SF]",V.Local.fSF,V.Local.sEval)
+F.Intrinsic.String.Replace(V.Local.sEval,"[CP]",V.Local.fCP,V.Local.sEval)
+
+F.Intrinsic.String.RegExReplace(V.Local.sEval,"/0","/1",True,True,V.Local.sEval)
+
+F.Intrinsic.Control.Try
+	F.In.Math.Evaluate(V.Local.sEval,v.Local.fRet)
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Error Occurred {0} with description {1}",V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+F.Intrinsic.Control.EndTry
+
+'F.Intrinsic.Control.If(V.Local.fRet,<,V.Local.fRet.Long)
+'	F.Intrinsic.Math.Sub(V.Local.fRet.Long,1,V.Local.fRet)
+'F.Intrinsic.Control.Else
+'	F.Intrinsic.Control.If(V.Local.fRet,>,V.Local.fRet.Long)
+'		F.Intrinsic.Math.Add(V.Local.fRet.Long,1,V.Local.fRet)
+'	F.Intrinsic.Control.EndIf
+'F.Intrinsic.Control.EndIf
+
+Gui.FormRMaint.txtCutValue.Text(V.Local.fRet)
+
+F.Intrinsic.Control.ExitSub
+Program.Sub.cmdCheck_Click.End
+
+Program.Sub.Comments.Start
+${$5$}$20.1.8223.27623$}$1
+${$6$}$rking$}$20220720074653387$}$QNdZLVy4bWuiWa9jh1ZTiKVzNnEzrvL4EzkGag2e5y3iYcG70kM0LKL1tPsYQTrc5yZAtbSDh7E=
+Program.Sub.Comments.End
