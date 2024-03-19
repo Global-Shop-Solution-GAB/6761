@@ -1,0 +1,20 @@
+Program.Sub.Preflight.Start
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+v.Local.sDueDate.Declare
+
+f.Intrinsic.control.If(v.Caller.Hook,=,11565)
+	f.Intrinsic.Control.If(v.Passed.000024,=,0)
+		f.Intrinsic.Date.DateAdd(D,3,v.Ambient.Date,v.Local.sDueDate)
+		F.Intrinsic.Date.ConvertDString(V.Local.sDueDate,"MMDDYYYY",V.Local.sDueDate)
+		Function.Intrinsic.String.Format(V.local.sDueDate,"YYYYMMDD",V.local.sDueDate)
+		v.Passed.000024.Set(v.Local.sDueDate)
+	f.Intrinsic.Control.EndIf
+f.Intrinsic.Control.ElseIf(v.Caller.Hook,=,11560)
+	f.Intrinsic.Date.DateAdd(D,3,v.Ambient.Date,v.Local.sDueDate)
+		F.Intrinsic.Date.ConvertDString(V.Local.sDueDate,"MMDDYYYY",V.Local.sDueDate)
+		Function.Intrinsic.String.Format(V.local.sDueDate,"YYYYMMDD",V.local.sDueDate)
+		v.Passed.000024.Set(v.Local.sDueDate)
+f.Intrinsic.Control.EndIf
+Program.Sub.Main.End
